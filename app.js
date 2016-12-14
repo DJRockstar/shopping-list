@@ -4,11 +4,15 @@ var state = {
 	items : []
 }
 
-var index = -1;
 //----functions that MODIFY state-------
 
 function addItem(state, item){
-	state.items.push(item);
+  if(item !== ''){
+  	state.items.push(item);
+  }
+  else {
+  	alert('Woops! Looks like you are entering spaces for your shopping list :P');
+  }
 }
 
 //-----functions that RENDER state------
@@ -25,7 +29,6 @@ function displayItem(state,element){
 			   </div>\
 			</li>`
 	});
-	index++;
 	element.html(itemHTML);
 }
 
@@ -36,9 +39,21 @@ function removeItem(state,item){
 		displayItem(state, $('ul.shopping-list'));
 		deleteItem();
 		checkItem();
-	}
-	
+	}	
 }
+
+// function checkedItems(){
+// 	if($('li').find('.shopping-item').hasClass('shopping-item__checked')!==true){
+// 		console.log('im here');
+// 		checkItem();
+// 		console.log($('li').find('.shopping-item').hasClass('shopping-item__checked'));
+// 		displayItem(state, $('ul.shopping-list'));
+// 	}
+// 	else {
+// 		$('li').find('.shopping-item').toggleClass('shopping-item__checked');
+// 	}
+// }
+
 
 //----EVENT LISTENERS---------------
 
@@ -47,7 +62,6 @@ function checkItem(){
 		$(this).closest('li').find('.shopping-item').toggleClass('shopping-item__checked');
 	})
 }
-
 
 function deleteItem(){
 	$('button.shopping-item-delete').on('click', function(){
@@ -60,7 +74,7 @@ function deleteItem(){
 function submitItem(){
 	$("form").on('submit', function(event){
 		event.preventDefault();
-		addItem(state,$('#shopping-list-entry').val());
+		addItem(state,$('#shopping-list-entry').val().replace(/\s/g, ''));
 		displayItem(state, $('ul.shopping-list'));
 		this.reset();
 		deleteItem();
