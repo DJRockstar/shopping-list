@@ -35,6 +35,7 @@ function removeItem(state,item){
 		state.items.splice(checkIndex,1);
 		displayItem(state, $('ul.shopping-list'));
 		deleteItem();
+		checkItem();
 	}
 	
 }
