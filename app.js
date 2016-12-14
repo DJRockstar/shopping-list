@@ -35,13 +35,13 @@ function removeItem(state,item){
 		state.items.splice(checkIndex,1);
 		displayItem(state, $('ul.shopping-list'));
 		deleteItem();
-	}
-	
+		checkItem();
+	}	
 }
 
 //----EVENT LISTENERS---------------
 
-function checkItem(){
+function checkItem(state){
 	$('button.shopping-item-toggle').on('click',function(){
 		$(this).closest('li').find('.shopping-item').toggleClass('shopping-item__checked');
 	})
