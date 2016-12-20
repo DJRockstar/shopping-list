@@ -1,105 +1,54 @@
 //-------single state object----------
 
-var state = {
-	items : []
-}
+var state = { items : [] };
+
+var list = $(".shopping-list");
 
 //----functions that MODIFY state-------
 
-function addItem(state, item){
-  if(item !== ''){
-  	state.items.push(item);
-  }
-  else {
-  	alert('Woops! Looks like you are entering spaces for your shopping list :P');
-  }
-}
+function addItem(newItem){
+  if (state.items.indexOf(newItem) < 0) {
+  	state.items.push(newItem);
+    displayItem(state.items[state.items.length-1]);
+  } else {
+    alert("You already have this item!")
+  };
+};
 
 //-----functions that RENDER state------
 
-function displayItem(state,element){
-	var itemHTML = state.items.map(function(item){
-	 return `<li>\
-			  <span class='shopping-item'>${item}</span>\
-			  <div class='shopping-item-controls'>\
-				<button class='shopping-item-toggle'>\
-					<span class='button-label'>check</span></button>\
-	  			<button class='shopping-item-delete'>\
-	    			<span class='button-label'>delete</span></button>\
-			   </div>\
-			</li>`
-	});
-	element.html(itemHTML);
-}
+function displayItem(item){
+  return list.append(
+    `<li>\
+      <span class='shopping-item'>${item}</span>\
+      <div class='shopping-item-controls'>\
+        <button class='shopping-item-toggle'>check</button>\
+        <button class='shopping-item-delete'>delete</button>\
+      </div>\
+    </li>`);
+};
 
-function removeItem(state,item){
+function removeItem(item){
 	var checkIndex = state.items.indexOf(item);
 	if(checkIndex !== -1){
 		state.items.splice(checkIndex,1);
-		displayItem(state, $('ul.shopping-list'));
-		deleteItem();
-		checkItem();
-	}	
-}
-
-// function checkedItems(){
-// 	if($('li').find('.shopping-item').hasClass('shopping-item__checked')!==true){
-// 		console.log('im here');
-// 		checkItem();
-// 		console.log($('li').find('.shopping-item').hasClass('shopping-item__checked'));
-// 		displayItem(state, $('ul.shopping-list'));
-// 	}
-// 	else {
-// 		$('li').find('.shopping-item').toggleClass('shopping-item__checked');
-// 	}
-// }
-
-
-//----EVENT LISTENERS---------------
-
-function checkItem(){
-	$('button.shopping-item-toggle').on('click',function(){
-		$(this).closest('li').find('.shopping-item').toggleClass('shopping-item__checked');
-	})
-}
-
-function deleteItem(){
-	$('button.shopping-item-delete').on('click', function(){
-		var item = $(this).closest('li').find('.shopping-item').text();
-		console.log(item);
-		removeItem(state,item);
-	})
-}
-
-function submitItem(){
-	$("form").on('submit', function(event){
-		event.preventDefault();
-		addItem(state,$('#shopping-list-entry').val().replace(/\s/g, ''));
-		displayItem(state, $('ul.shopping-list'));
-		this.reset();
-		deleteItem();
-		checkItem();
-	})
-}
+    list.children()[checkIndex].remove();
+	};
+};
 
 $(document).ready(function(){
-	submitItem();
+  $('body').on('click', '.shopping-item-toggle', function(event){
+  	$(this).closest('li').find('.shopping-item').toggleClass('shopping-item__checked');
+  });
+
+  $('body').on('click', '.shopping-item-delete', function(){
+    var item = $(this).closest('li').find('.shopping-item').text();
+    removeItem(item);
+  });
+
+  $("form").on('submit', function(event){
+  	event.preventDefault();
+  	addItem($('#shopping-list-entry').val());
+  	this.reset();
+  });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
